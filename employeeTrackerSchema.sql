@@ -11,9 +11,9 @@ CREATE TABLE department (
 CREATE TABLE employee_role (
     id INT NOT NULL AUTO_INCREMENT,
     title VARCHAR(30),
-    salary DECIMAL(100,2) NULL,
+    salary DECIMAL(10,2) NULL,
     departmentId INT NOT NULL,
-    PRIMARY KEY (id),
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE employee (
@@ -21,6 +21,8 @@ CREATE TABLE employee (
     firstName VARCHAR(100),
     lastName VARCHAR(100),
     roleId INT(10) NOT NULL,
-    mangerId INT(10)
+    mangerId INT(10),
+    PRIMARY KEY (id)
+
 );
 
