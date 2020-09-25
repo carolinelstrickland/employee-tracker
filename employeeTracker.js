@@ -29,7 +29,15 @@ function start() {
         name: "firstSelection",
         type: "list",
         message: "Would you like to do first?",
-        choices: ["View all emloyees", "View all employees by department", "View all employees by manager", "Add employee", "Remove employee", "Update employee role", "Update employee manager","View all roles"]
+        choices: [
+            "View all emloyees", 
+            "View all employees by department", 
+            "View all employees by manager", 
+            "Add employee", 
+            "Remove employee", 
+            "Update employee role", 
+            "Update employee manager",
+            "View all roles"]
       })
       .then(function(answer) {
         // based on their answer, either call the bid or the post functions
@@ -61,4 +69,34 @@ function start() {
           connection.end();
         };
       });
-  } 
+};
+
+//displayEmployees();
+//displayDepartment();
+// displayManagers();
+
+function addEmployee(){
+    inquirer.prompt([
+        {
+            name: "employeeFirstName",
+            type: "input",
+            message: "What is the new employee's first name?"
+        },
+        {
+            name: "employeeLastName",
+            type: "input",
+            message: "What is the new employee's last name?"
+        },
+        {
+            name: "employeeRole",
+            type: "list",
+            message: "What is the new employee's role?",
+            choices: ["Software Engineer","Salesperson","Legal Team Lead","Lawyer", "Lead Engineer", "Sales Lead"]
+        },
+    ])
+};
+// removeEmployee();
+// updateRole();
+// updateManager();
+// displayRoles();
+
