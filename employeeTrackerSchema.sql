@@ -18,8 +18,8 @@ CREATE TABLE employeeRole (
 
 CREATE TABLE employee (
     id INT NOT NULL AUTO_INCREMENT,
-    firstName VARCHAR(100),
-    lastName VARCHAR(100),
+    firstName VARCHAR(100) NOT NULL,
+    lastName VARCHAR(100) NOT NULL,
     roleId INT(10) NOT NULL REFERENCES employeeRole,
     mangerId INT(10),
     PRIMARY KEY (id)

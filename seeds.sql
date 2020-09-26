@@ -1,3 +1,5 @@
+USE employeeTracker_DB;
+
 INSERT INTO department (name)
 VALUES 
 ("Legal"), 
@@ -15,8 +17,8 @@ VALUES
 
 INSERT INTO employee (firstName, lastName, roleId, managerId)
 VALUES 
-("Maria", "Cruz", 3, null),
-("Mari", "Martin", 4, 1),
-("Sarah", "McGuinn", 2, 1),
+("Maria", "Cruz", 3, 1),
+("Mari", "Martin", 4, null),
+("Sarah", "McGuinn", 2, null),
 ("Nick", "Kroll", 1, null),
-("John", "Mulaney", 5, 2)
+("John", "Mulaney", 5, null)
