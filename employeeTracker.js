@@ -87,54 +87,52 @@ function displayDepartment(){
   })
 };
 
-function addEmployee(){
-  connection.query("SELECT * FROM employee", function(err, result){
-    if (err) throw err;
-    let employees = [];
-
-    connection.query("SELECT * FROM employeeRole", function(err, result){
-    if (err) throw err;
-
-    inquirer.prompt([
-      {
-          name: "employeeFirstName",
-          type: "input",
-          message: "What is the new employee's first name?"
-      },
-      {
-          name: "employeeLastName",
-          type: "input",
-          message: "What is the new employee's last name?"
-      },
-      {
-          name: "roleId",
-          type: "list",
-          message: "What is the employee's role?",
-          choices: result.map(function(data) {
-            return data.title;
-          })
-      },
-      {
-          name:"managerId",
-          type: "list",
-          message: "Who is the employee's manager?",
-          choices: [...employees.map(function (data) {
-            return `${data.first_name} ${data.last_name}`;
-          }), "none"]
-      }
-  ]).then(function(answer) {
-  let newEmployee = {
-    firstName: answer.employeeFirstName, lastName: answer.employeeLastName, roleId: answer.roleId, managerId: answer.managerId
-  }
-  connection.query("INSERT INTO employee SET ?", newEmployee, function(err,result){
-    if (err) throw err;
-    console.log("Employee has been added.")
-    start();
-  })
-})
-})
-})
-};
+// function addEmployee(){
+//   connection.query("SELECT * FROM employee", function(err, result){
+//     if (err) throw err;
+//     let employees = [];
+//       connection.query("SELECT * FROM employeeRole", function(err, result){
+//       if (err) throw err;
+//       inquirer.prompt([
+//       {
+//           name: "employeeFirstName",
+//           type: "input",
+//           message: "What is the new employee's first name?"
+//       },
+//       {
+//           name: "employeeLastName",
+//           type: "input",
+//           message: "What is the new employee's last name?"
+//       },
+//       {
+//           name: "roleId",
+//           type: "list",
+//           message: "What is the employee's role?",
+//           choices: result.map(function(data) {
+//             return data.title;
+//           })
+//       },
+//       {
+//           name:"managerId",
+//           type: "list",
+//           message: "Who is the employee's manager?",
+//           choices: [...employees.map(function (data) {
+//             return `${data.first_name} ${data.last_name}`;
+//           }), "none"]
+//       }
+//   ]).then(function(answer) {
+//   let newEmployee = {
+//     firstName: answer.employeeFirstName, lastName: answer.employeeLastName, roleId: answer.roleId, managerId: answer.managerId
+//   }
+//   connection.query("INSERT INTO employee SET ?", newEmployee, function(err,result){
+//     if (err) throw err;
+//     console.log("Employee has been added.")
+//     start();
+//   })
+// })
+// })
+// })
+// };
 
 function addRole(){
   connection.query("SELECT * FROM department", function(err,results){
