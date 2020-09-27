@@ -134,6 +134,65 @@ function displayDepartment(){
 // })
 // };
 
+const addEmployee = () => {
+	let department = 'SELECT * FROM department'; //department query
+  let employees = 'SELECT * FROM employee'; // employee quuery
+	connection.query(department, function (error, results) { //open connection on department
+    if (error) throw error;
+    //mapping and passing directly, without extra steps, you know what name and value are already :) 
+		const departments = results.map(result => ({
+			value: result.id,
+			name: result.name,
+		}));
+		connection.query(employees, function (error, results) { //open connection on employee
+      if (error) throw error; 
+      //map results, contcat first and last name, and push at the end None, su user can have a choise not to select a manager
+			const manager = results.map(employee => ({
+				name: employee.first_name + ' ' + employee.last_name,
+				value: employee.id,
+			}));
+			manager.push({
+				name: 'None',
+				value: null,
+			});
+			inquirer
+				.prompt([
+					{
+						type: 'input',
+						name: 'first_name',
+						message: "What is the employee's first name?",
+					},
+					{
+						type: 'input',
+						name: 'last_name',
+						message: "What is the employee's last name?",
+					},
+					{
+						type: 'list',
+						name: 'manager_id',
+						message: 'Select employee manager',
+						choices: manager, //pass manager
+					},
+					{
+						type: 'list',
+						name: 'role_id',
+						message: 'Which department this employee belongs to?',
+						choices: departments, //pass departments
+					},
+				])
+				.then(response => {
+					console.log(response);
+					const sqlQuery = 'INSERT INTO employee SET ?';
+					connection.query(sqlQuery, response, function (error, results) {
+						if (error) throw error;
+						console.log('inserted');
+						start();
+					});
+				});
+		});
+	});
+};
+
 function addRole(){
   connection.query("SELECT * FROM department", function(err,results){
     if (err) throw err;
