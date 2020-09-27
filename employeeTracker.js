@@ -111,7 +111,7 @@ function addEmployee(){
           type: "list",
           message: "What is the employee's role?",
           choices: result.map(function(data) {
-            return data.roleTitle;
+            return data.title;
           })
       },
       {
@@ -124,7 +124,7 @@ function addEmployee(){
       }
   ]).then(function(answer) {
   let newEmployee = {
-    firstName: answer.employeeFirstName, lastName: answer.employeeLastName, roleID: answer.roleId, managerID: answer.managerId
+    firstName: answer.employeeFirstName, lastName: answer.employeeLastName, roleId: answer.roleId, managerId: answer.managerId
   }
   connection.query("INSERT INTO employee SET ?", newEmployee, function(err,result){
     if (err) throw err;
