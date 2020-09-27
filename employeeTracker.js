@@ -87,53 +87,6 @@ function displayDepartment(){
   })
 };
 
-// function addEmployee(){
-//   connection.query("SELECT * FROM employee", function(err, result){
-//     if (err) throw err;
-//     let employees = [];
-//       connection.query("SELECT * FROM employeeRole", function(err, result){
-//       if (err) throw err;
-//       inquirer.prompt([
-//       {
-//           name: "employeeFirstName",
-//           type: "input",
-//           message: "What is the new employee's first name?"
-//       },
-//       {
-//           name: "employeeLastName",
-//           type: "input",
-//           message: "What is the new employee's last name?"
-//       },
-//       {
-//           name: "roleId",
-//           type: "list",
-//           message: "What is the employee's role?",
-//           choices: result.map(function(data) {
-//             return data.title;
-//           })
-//       },
-//       {
-//           name:"managerId",
-//           type: "list",
-//           message: "Who is the employee's manager?",
-//           choices: [...employees.map(function (data) {
-//             return `${data.first_name} ${data.last_name}`;
-//           }), "none"]
-//       }
-//   ]).then(function(answer) {
-//   let newEmployee = {
-//     firstName: answer.employeeFirstName, lastName: answer.employeeLastName, roleId: answer.roleId, managerId: answer.managerId
-//   }
-//   connection.query("INSERT INTO employee SET ?", newEmployee, function(err,result){
-//     if (err) throw err;
-//     console.log("Employee has been added.")
-//     start();
-//   })
-// })
-// })
-// })
-// };
-
 const addEmployee = () => {
 	let department = 'SELECT * FROM department'; //department query
   let employees = 'SELECT * FROM employee'; // employee quuery
@@ -148,7 +101,7 @@ const addEmployee = () => {
       if (error) throw error; 
       //map results, contcat first and last name, and push at the end None, su user can have a choise not to select a manager
 			const manager = results.map(employee => ({
-				name: employee.first_name + ' ' + employee.last_name,
+				name: employee.firstName + ' ' + employee.lastName,
 				value: employee.id,
 			}));
 			manager.push({
@@ -159,23 +112,23 @@ const addEmployee = () => {
 				.prompt([
 					{
 						type: 'input',
-						name: 'first_name',
+						name: 'firstName',
 						message: "What is the employee's first name?",
 					},
 					{
 						type: 'input',
-						name: 'last_name',
+						name: 'lastName',
 						message: "What is the employee's last name?",
 					},
 					{
 						type: 'list',
-						name: 'manager_id',
+						name: 'managerId',
 						message: 'Select employee manager',
 						choices: manager, //pass manager
 					},
 					{
 						type: 'list',
-						name: 'role_id',
+						name: 'roleId',
 						message: 'Which department this employee belongs to?',
 						choices: departments, //pass departments
 					},
@@ -185,7 +138,7 @@ const addEmployee = () => {
 					const sqlQuery = 'INSERT INTO employee SET ?';
 					connection.query(sqlQuery, response, function (error, results) {
 						if (error) throw error;
-						console.log('inserted');
+						console.log('Inserted');
 						start();
 					});
 				});
