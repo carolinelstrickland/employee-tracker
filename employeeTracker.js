@@ -28,33 +28,33 @@ function start() {
       .prompt({
         name: "firstSelection",
         type: "list",
-        message: "Would you like to do first?",
+        message: "What would you like to do?",
         choices: [
-            "View all emloyees", 
-            "View all employees by department", 
-            "View all employees by manager", 
-            "Add employee", 
-            "Remove employee", 
+            "View all employees", 
+            "View all departments", 
+            "Add employee",
+            "Add role", 
+            "Add department",
             "Update employee role", 
-            "Update employee manager",
-            "View all roles"]
+            "View all roles",
+            "Exit"
+          ]
       })
       .then(function(answer) {
-        // based on their answer, either call the bid or the post functions
         if (answer.firstSelection === "View all employees") {
           displayEmployees();
         }
-        else if(answer.firstSelection === "View all employees by department") {
+        else if(answer.firstSelection === "View all departments") {
           displayDepartment();
         } 
-        else if(answer.firstSelection === "View all employees by manager") {
-            displayManagers();
-        }
         else if(answer.firstSelection === "Add employee") {
             addEmployee();
         }
-        else if(answer.firstSelection === "Remove employee") {
-            removeEmployee();
+        else if(answer.firstSelection === "Add role") {
+            addRole();
+        } 
+        else if(answer.firstSelection === "Add department") {
+            addDepartment();
         }
         else if(answer.firstSelection === "Update employee role") {
             updateRole();
@@ -71,32 +71,141 @@ function start() {
       });
 };
 
-//displayEmployees();
-//displayDepartment();
-// displayManagers();
+function displayEmployees(){
+  connection.query("SELECT * FROM employee", function(err, result){
+    if (err) throw err;
+    console.table(result, ["id", "firstName", "lastName"]);
+    start();
+  })
+};
+
+function displayDepartment(){
+  connection.query("SELECT * FROM department", function(err, result){
+    if (err) throw err;
+    console.table(result);
+    start();
+  })
+};
 
 function addEmployee(){
+  connection.query("SELECT * FROM employee", function(err, result){
+    if (err) throw err;
+    let employees = [];
+
+    connection.query("SELECT * FROM employeeRole", function(err, result){
+    if (err) throw err;
+
     inquirer.prompt([
-        {
-            name: "employeeFirstName",
-            type: "input",
-            message: "What is the new employee's first name?"
-        },
-        {
-            name: "employeeLastName",
-            type: "input",
-            message: "What is the new employee's last name?"
-        },
-        {
-            name: "employeeRole",
-            type: "list",
-            message: "What is the new employee's role?",
-            choices: ["Software Engineer","Salesperson","Legal Team Lead","Lawyer", "Lead Engineer", "Sales Lead"]
-        },
-    ])
+      {
+          name: "employeeFirstName",
+          type: "input",
+          message: "What is the new employee's first name?"
+      },
+      {
+          name: "employeeLastName",
+          type: "input",
+          message: "What is the new employee's last name?"
+      },
+      {
+          name: "roleId",
+          type: "list",
+          message: "What is the employee's role?",
+          choices: result.map(function(data) {
+            return data.roleTitle;
+          })
+      },
+      {
+          name:"managerId",
+          type: "list",
+          message: "Who is the employee's manager?",
+          choices: [...employees.map(function (data) {
+            return `${data.first_name} ${data.last_name}`;
+          }), "none"]
+      }
+  ]).then(function(answer) {
+  let newEmployee = {
+    firstName: answer.employeeFirstName, lastName: answer.employeeLastName, roleID: answer.roleId, managerID: answer.managerId
+  }
+  connection.query("INSERT INTO employee SET ?", newEmployee, function(err,result){
+    if (err) throw err;
+    console.log("Employee has been added.")
+    start();
+  })
+})
+})
+})
 };
-// removeEmployee();
-// updateRole();
-// updateManager();
-// displayRoles();
+
+function addRole(){
+  connection.query("SELECT * FROM department", function(err,results){
+    if (err) throw err;
+    let departments = [];
+    departments = results.map(department => ({
+      departmentId: department.id, departmentName: department.name
+    }))
+  inquirer.prompt([
+    {
+      name: "roleTitle",
+      type: "input",
+      message: "What is the new role?"
+    },
+    {
+      name: "roleSalary",
+      type: "input",
+      message: "What is the salary for this role?"
+    },
+    {
+      name: "departmentId",
+      type: "list",
+      message: "What department does this role belong to?",
+      choices: departments.map(department => ({
+        value: department.departmentId, name: department.departmentName,
+      }))
+    }
+  ]).then(function(answer){
+    let newRole = {
+      title: answer.roleTitle, salary: answer.roleSalary, departmentId: answer.departmentId
+    }
+    connection.query("INSERT INTO employeeRole SET ?", newRole, function(err,result){
+      if (err) throw err;
+      console.log("Role has been added.")
+      start();
+    })
+  })
+})
+};
+
+function addDepartment(){
+  inquirer.prompt([
+  {
+    name: "departmentSelection",
+    type: "input",
+    message: "What is the name of the new department?"
+  }
+  ]).then(function(answer){
+    connection.query("INSERT into department SET ?", {name: answer.departmentSelection}, function(err,result){
+      if (err) throw err;
+      console.log("Department has been created.");
+      start();
+    })
+  })
+};
+
+function updateRole(){
+
+};
+
+function displayRoles(){
+  connection.query("SELECT * FROM employeeRole LEFT JOIN department ON employeeRole.departmentId = department.id", function(err, result){
+    if (err) throw err;
+    console.table(result, ["id","title","salary","name"]);
+    start();
+  })
+  
+};
+
+
+
+
+
 
