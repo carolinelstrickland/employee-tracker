@@ -88,18 +88,16 @@ function displayDepartment(){
 };
 
 const addEmployee = () => {
-	let department = 'SELECT * FROM department'; //department query
-  let employees = 'SELECT * FROM employee'; // employee quuery
-	connection.query(department, function (error, results) { //open connection on department
-    if (error) throw error;
-    //mapping and passing directly, without extra steps, you know what name and value are already :) 
+	let department = 'SELECT * FROM department'; 
+  let employees = 'SELECT * FROM employee'; 
+	connection.query(department, function (err, results) { 
+    if (err) throw err;
 		const departments = results.map(result => ({
 			value: result.id,
 			name: result.name,
 		}));
-		connection.query(employees, function (error, results) { //open connection on employee
-      if (error) throw error; 
-      //map results, contcat first and last name, and push at the end None, su user can have a choise not to select a manager
+		connection.query(employees, function (err, results) { 
+      if (err) throw err; 
 			const manager = results.map(employee => ({
 				name: employee.firstName + ' ' + employee.lastName,
 				value: employee.id,
@@ -124,20 +122,20 @@ const addEmployee = () => {
 						type: 'list',
 						name: 'managerId',
 						message: 'Select employee manager',
-						choices: manager, //pass manager
+						choices: manager, 
 					},
 					{
 						type: 'list',
 						name: 'roleId',
 						message: 'Which department this employee belongs to?',
-						choices: departments, //pass departments
+						choices: departments,
 					},
 				])
 				.then(response => {
 					console.log(response);
 					const sqlQuery = 'INSERT INTO employee SET ?';
-					connection.query(sqlQuery, response, function (error, results) {
-						if (error) throw error;
+					connection.query(sqlQuery, response, function (err, results) {
+						if (err) throw err;
 						console.log('Inserted');
 						start();
 					});
@@ -201,9 +199,18 @@ function addDepartment(){
   })
 };
 
-function updateRole(){
+// function updateRole(){
+//   let employees = 'SELECT * FROM employee';
+//   let employeeRole = 'SELECT * FROM employeeRole';
+//   connection.query(employees, function(err, result){
+//     if (err) throw err;
+//     const employees = results.map(result => ({
+// 			value: result.id,
+// 			name: result.name
 
-};
+//   })
+
+// }
 
 function displayRoles(){
   connection.query("SELECT * FROM employeeRole LEFT JOIN department ON employeeRole.departmentId = department.id", function(err, result){
